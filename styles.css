@@ -4,14 +4,24 @@
   box-sizing: border-box;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
 body {
   font-family: Poppins;
   background: #f1f1f1;
 }
 
-header {
+body > header {
   background: #165207;
-  padding: 0.5rem 0 6rem;
+  padding: 1rem 0 6rem;
   text-align: center;
   color: #dbdbdb;
 }
@@ -25,7 +35,7 @@ main .container {
   max-width: min(700px, 85vw);
 
   position: relative;
-  top: -6rem;
+  top: -3rem;
 }
 
 main .container section h2 {
@@ -45,8 +55,15 @@ main .container section.balance h2 {
   border-radius: 0.45rem;
 }
 
-.balance .card h3 {
+.balance .card header {
   margin-bottom: 1rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.balance .card header h3 {
   font-size: 0.8rem;
   color: #696969;
 }
@@ -54,9 +71,10 @@ main .container section.balance h2 {
 .balance .card span {
   font-size: 1.5rem;
   font-weight: 500;
+  color: #464646;
 }
 
-.balance .card.total h3 {
+.balance .card.total header h3 {
   color: #ffffffde;
 }
 
@@ -65,13 +83,31 @@ main .container section.balance h2 {
   color: #fff;
 }
 
+.balance .card.total span {
+  color: #fff;
+}
+
 .transactions {
-  margin-top: 4rem;
+  margin-top: 2rem;
+  overflow-x: auto;
+}
+
+.transactions a {
+  text-decoration: none;
+  color: #04c404;
+  font-weight: 500;
+
+  transition: filter 0.2s;
+}
+
+.transactions a:hover {
+  filter: brightness(0.9);
 }
 
 .transactions table {
   width: 100%;
   border-spacing: 0 8px;
+  margin-top: 1rem;
 }
 
 .transactions table tr {
@@ -89,9 +125,23 @@ main .container section.balance h2 {
   padding: 0.8rem 1.5rem;
 }
 
+.transactions table td.actions img {
+  cursor: pointer;
+  transition: filter 0.2s;
+}
+
+.transactions table td.actions img:hover {
+  filter: brightness(0.85);
+}
+
 .transactions table th:first-child,
 .transactions table td:first-child {
-  border-radius: 0.5rem 0 0 0.5rem;
+  border-radius: 0.3rem 0 0 0.3rem;
+}
+
+.transactions table th:last-child,
+.transactions table td:last-child {
+  border-radius: 0 0.3rem 0.3rem 0;
 }
 
 .transactions table tr.revenue td.value {
@@ -102,14 +152,108 @@ main .container section.balance h2 {
   color: red;
 }
 
+.modal-overlay {
+  display: none;
+}
+
+.modal-overlay.active {
+  position: fixed;
+  top: 0;
+  z-index: 999;
+  width: 100%;
+  height: 100%;
+
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  background: #f1f1f1;
+  padding: 2rem;
+  border-radius: 0.5rem;
+
+  width: 90%;
+  max-width: 600px;
+}
+
+.modal h2 {
+  color: #464646;
+}
+
+.modal .input-group {
+  margin-top: 1rem;
+}
+
+.modal .input-group input {
+  border: 0;
+  border-radius: 0.25rem;
+  width: 100%;
+  padding: 1rem;
+}
+
+.modal .input-group input:focus {
+  box-shadow: 0 0 8px #acacac;
+  outline: none;
+}
+
+.modal .input-group small {
+  opacity: 0.75;
+}
+
+.modal .buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.modal .buttons .button {
+  width: 48%;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-family: Poppins;
+  font-size: 1rem;
+
+  transition: filter 0.2s;
+}
+
+.modal .buttons .button.cancel {
+  color: #b64747;
+  text-decoration: none;
+  border: 2px solid #b92727;
+}
+
+.modal .buttons .button.submit {
+  border: 0;
+  background: #0aa70a;
+  color: #fff;
+}
+
+.modal .buttons .button:hover {
+  filter: brightness(0.9);
+  cursor: pointer;
+}
+
+.modal .buttons .button.cancel:hover {
+  filter: brightness(0.8);
+}
+
 footer {
   text-align: center;
   padding: 1rem;
   opacity: 0.5;
 }
 
-@media (max-width: 720px) {
-  .transactions {
-    overflow: scroll;
+@media (min-width: 768px) {
+  .balance {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
   }
 }

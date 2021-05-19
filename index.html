@@ -14,36 +14,47 @@
 
 <body>
   <header>
-    <h1>dev.finance$</h1>
+    <a href="./index.html"> <img src="./assets/logo.svg" alt="DevFinance Logo"></a>
   </header>
 
   <main>
     <div class="container">
       <section class="balance">
-        <h2>Balanço</h2>
+        <h2 class="sr-only">Balanço</h2>
         <div class="card">
-          <h3>Entradas</h3>
+          <header>
+            <h3>Entradas</h3>
+            <img src="./assets/income.svg" />
+          </header>
           <span>R$5.000,00</span>
         </div>
 
         <div class="card">
-          <h3>Saídas</h3>
+          <header>
+            <h3>Saídas</h3>
+            <img src="./assets/expense.svg" />
+          </header>
           <span>R$2.000,00</span>
         </div>
 
         <div class="card total">
-          <h3>Total</h3>
+          <header>
+            <h3>Total</h3>
+            <img src="./assets/total.svg" />
+          </header>
           <span>R$3.000,00</span>
         </div>
       </section>
       <section class="transactions">
-        <h2>Transações</h2>
+        <h2 class="sr-only">Transações</h2>
+        <a href="#" onclick="Modal.open()">+ Nova Transação</a>
         <table>
           <thead>
             <tr>
               <th>Descrição</th>
               <th>Valor</th>
               <th>Data</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -51,24 +62,72 @@
               <td class="description">Luz</td>
               <td class="value">-R$500,00</td>
               <td class="date">23/01/2021</td>
+              <td class="actions">
+                <img src="./assets/minus.svg" alt="Excluir transação" title="Excluir transação">
+              </td>
             </tr>
             <tr class="revenue">
               <td class="description">Criação de website</td>
               <td class="value">R$5.000,00</td>
               <td class="date">23/01/2021</td>
+              <td class="actions">
+                <img src="./assets/minus.svg" alt="Excluir transação" title="Excluir transação">
+              </td>
             </tr>
             <tr class="expense">
               <td class="description">Aluguel</td>
               <td class="value">-R$1.500,00</td>
               <td class="date">23/01/2021</td>
+              <td class="actions">
+                <img src="./assets/minus.svg" alt="Excluir transação" title="Excluir transação">
+              </td>
             </tr>
           </tbody>
         </table>
       </section>
     </div>
+
+    <div class="modal-overlay">
+      <div class="modal">
+        <h2>Nova Transação</h2>
+        <form>
+          <div class="input-group">
+            <label for="description" class="sr-only">Descrição</label>
+            <input type="text" name="description" id="description" placeholder="Descrição">
+          </div>
+
+          <div class="input-group">
+            <label for="value" class="sr-only">Valor</label>
+            <input type="number" name="value" id="value" placeholder="0,00">
+            <small>Use o sinal - (negativo) para despesas e , (vírgula) para casas decimais.</small>
+          </div>
+
+          <div class="input-group">
+            <label for="date" class="sr-only">Data</label>
+            <input type="date" name="date" id="date" placeholder="Data">
+          </div>
+
+          <div class="buttons">
+            <a href="#" class="button cancel" onclick="Modal.close()">Cancelar</a>
+            <button type="submit" class="button submit">Salvar</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </main>
 
   <footer>2021 - dev.finance$</footer>
+
+  <script>
+    const Modal = {
+      open() {
+        document.querySelector(".modal-overlay").classList.add("active");
+      },
+      close() {
+        document.querySelector(".modal-overlay").classList.remove("active");
+      }
+    }
+  </script>
 </body>
 
 </html>
