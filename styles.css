@@ -144,11 +144,11 @@ main .container section.balance h2 {
   border-radius: 0 0.3rem 0.3rem 0;
 }
 
-.transactions table tr.revenue td.value {
+.transactions table tr td.income {
   color: green;
 }
 
-.transactions table tr.expense td.value {
+.transactions table tr td.expense {
   color: red;
 }
 
