@@ -7,6 +7,16 @@ const Modal = {
   }
 }
 
+const Storage = {
+  get() {
+    return JSON.parse(localStorage.getItem("dev.finance:transactions")) || [];
+  },
+
+  set(transactions) {
+    localStorage.setItem("dev.finance:transactions", JSON.stringify(transactions));
+  }
+}
+
 const Balance = {
   incomes() {
     let totalIncomes = 0;
@@ -35,26 +45,7 @@ const Balance = {
 }
 
 const Transaction = {
-  all: [
-    {
-      id: 1,
-      description: "Luz",
-      amount: -10000,
-      date: "23/01/2021"
-    },
-    {
-      id: 2,
-      description: "Criação website",
-      amount: 500000,
-      date: "23/01/2021"
-    },
-    {
-      id: 3,
-      description: "Aluguel",
-      amount: -100000,
-      date: "23/01/2021"
-    }
-  ],
+  all: Storage.get(),
 
   add(transaction) {
     Transaction.all.push(transaction);
@@ -67,6 +58,7 @@ const Transaction = {
     App.reload();
   }
 }
+
 
 const DOM = {
   transactionsContainer: document.querySelector("#transactions-table tbody"),
@@ -199,6 +191,8 @@ const App = {
   init() {
     Transaction.all.forEach(DOM.addTransaction);
     DOM.updateBalance();
+
+    Storage.set(Transaction.all);
   },
 
   reload() {
