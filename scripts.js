@@ -48,6 +48,14 @@ const Transaction = {
   all: Storage.get(),
 
   add(transaction) {
+    let latestId = 0;
+
+    if (Transaction.all.length > 0) {
+      latestId = Transaction.all[Transaction.all.length - 1].id;
+    }
+
+    transaction["id"] = latestId + 1;
+
     Transaction.all.push(transaction);
     App.reload();
   },
