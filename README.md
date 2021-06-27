@@ -13,7 +13,7 @@ Foi desenvolvida uma aplicação web utilizando os principais conceitos de HTML,
 <br/> <br/> 
 ## :pager: Design da aplicação
 A imagem abaixo ilustra a aplicação com seus principais componentes.
-<img width="70%" src="https://user-images.githubusercontent.com/63478857/119246474-4ee3cc00-bb58-11eb-9abf-7908b2ea5cf0.png"></img>
+<img width="90%" src="https://user-images.githubusercontent.com/63478857/119246474-4ee3cc00-bb58-11eb-9abf-7908b2ea5cf0.png"></img>
 <br/> <br/> 
 ## 🌐 Deploy
 A aplicação foi publicada na Vercel. Você pode visualizá-la através do link https://devfinance-ms.vercel.app.
