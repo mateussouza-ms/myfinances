@@ -296,19 +296,15 @@ const App = {
   init() {
     let page = "";
 
-    switch (window.location.pathname) {
-      case "/pages/Home/":
-        page = "HOME";
-        Home.init();
-        break;
-      case "/pages/Auth/":
-        page = "AUTH";
-        Auth.init();
-        break;
-
-      default:
-        break;
+    if (window.location.href.includes("/pages/Home")) {
+      page = "HOME";
+      Home.init();
     }
+    if (window.location.href.includes("/pages/Auth")) {
+      page = "HOME";
+      Auth.init();
+    }
+
     window.addEventListener("load", () => {
       window.unsubscribe = Firebase.onAuthStateChanged(
         Firebase.auth,
