@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <title>dev.finance$</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Controle suas finanças de maneira fácil e organizada." />
+  <meta name="image" content="https://devfinance-ms.vercel.app/assets/icon-meta.png" />
+
+  <meta property="og:url" content="https://devfinance-ms.vercel.app" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="DevFinance | Controle de finanças" />
+  <meta property="og:description" content="Controle suas finanças de maneira fácil e organizada." />
+  <meta property="og:locale" content="pt_BR" />
+
+  <meta property="og:image" content="https://devfinance-ms.vercel.app/assets/icon-meta.png" />
+  <meta property="og:image:secure_url" content="https://devfinance-ms.vercel.app/assets/icon-meta.png" />
+  <meta property="og:image:alt" content="DevFinance Icon" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="400" />
+  <meta property="og:image:height" content="200" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="DevFinance | Controle de finanças" />
+  <meta name="twitter:image" content="https://devfinance-ms.vercel.app/assets/icon-meta.png" />
+  <meta name="twitter:image:src" content="https://devfinance-ms.vercel.app/assets/icon-meta.png" />
+  <meta name="twitter:image:alt" content="DevFinance Icon" />
+  <meta name="twitter:image:width" content="400" />
+  <meta name="twitter:image:height" content="200" />
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="shortcut icon" href="/assets/favicon.png" type="image/png" />
+</head>
+
+<body>
+  <header>
+    <div class="avatar">
+      <img id="avatar-img" alt="Avatar do usuário" />
+
+      <div class="avatar-info">
+        <span class="name">Mateus Souza</span>
+        <span class="email">mateeus.ms@gmail.com</span>
+        <a id="logout-link" class="logout-link">Sair</a>
+      </div>
+    </div>
+    <a href="./index.html"> <img src="/assets/logo.svg" alt="DevFinance Logo"></a>
+  </header>
+
+  <main>
+    <div class="container">
+      <section class="balance">
+        <h2 class="sr-only">Balanço</h2>
+        <div class="card">
+          <header>
+            <h3>Entradas</h3>
+            <img src="/assets/income.svg" />
+          </header>
+          <span id="incomes">R$ 0,00</span>
+        </div>
+
+        <div class="card">
+          <header>
+            <h3>Saídas</h3>
+            <img src="/assets/expense.svg" />
+          </header>
+          <span id="expenses">R$ 0,00</span>
+        </div>
+
+        <div class="card total">
+          <header>
+            <h3>Total</h3>
+            <img src="/assets/total.svg" />
+          </header>
+          <span id="total">R$ 0,00</span>
+        </div>
+      </section>
+      <section class="transactions">
+        <h2 class="sr-only">Transações</h2>
+        <a href="#" id="new-transaction">+ Nova Transação</a>
+        <table id="transactions-table">
+          <thead>
+            <tr>
+              <th>Descrição</th>
+              <th>Valor</th>
+              <th>Data</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </section>
+    </div>
+
+    <div class="modal-overlay">
+      <div class="modal">
+        <h2>Nova Transação</h2>
+        <form id="add-transaction-form">
+          <div class="input-group">
+            <label for="description" class="sr-only">Descrição</label>
+            <input type="text" name="description" id="description" placeholder="Descrição" required />
+          </div>
+
+          <div class="input-group">
+            <label for="amount" class="sr-only">Valor</label>
+            <input type="number" step="0.01" name="amount" id="amount" placeholder="0,00" required />
+            <small>Use o sinal - (negativo) para despesas e , (vírgula) para casas decimais.</small>
+          </div>
+
+          <div class="input-group">
+            <label for="date" class="sr-only">Data</label>
+            <input type="date" name="date" id="date" placeholder="Data" required />
+          </div>
+
+          <div class="buttons">
+            <a href="#" id="close-modal" class="button cancel">Cancelar</a>
+            <button type="submit" class="button submit">Salvar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer>2021 - dev.finance$</footer>
+
+  <!-- <script type="module" src="/index.js"></script> -->
+  <script type="module" src="/index.js"></script>
+</body>
+
+</html>
