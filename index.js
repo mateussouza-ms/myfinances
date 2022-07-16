@@ -312,10 +312,15 @@ const App = {
           if (authUser) {
             Firebase.user = authUser;
             Home.DOM.updateUser(authUser);
-            page !== "HOME" && window.location.replace("/pages/Home");
+            console.log("window.location.href", window.location.href);
+            console.log(
+              'window.location.href.includes("/pages/Auth")',
+              window.location.href.includes("/pages/Auth")
+            );
+            // !window.location.href.includes("/pages/Home") && window.location.replace("/pages/Home");
           } else {
             Firebase.user = null;
-            page !== "AUTH" && window.location.replace("/pages/Auth");
+            // window.location.href.includes("/pages/Auth") && window.location.replace("/pages/Auth");
           }
         }
       );
