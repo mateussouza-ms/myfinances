@@ -309,18 +309,16 @@ const App = {
       window.unsubscribe = Firebase.onAuthStateChanged(
         Firebase.auth,
         async (authUser) => {
+          console.log("authUser", authUser);
           if (authUser) {
             Firebase.user = authUser;
             Home.DOM.updateUser(authUser);
-            console.log("window.location.href", window.location.href);
-            console.log(
-              'window.location.href.includes("/pages/Auth")',
-              window.location.href.includes("/pages/Auth")
-            );
-            // !window.location.href.includes("/pages/Home") && window.location.replace("/pages/Home");
+            !window.location.href.includes("/pages/Home") &&
+              window.location.replace("/pages/Home");
           } else {
             Firebase.user = null;
-            // window.location.href.includes("/pages/Auth") && window.location.replace("/pages/Auth");
+            window.location.href.includes("/pages/Auth") &&
+              window.location.replace("/pages/Auth");
           }
         }
       );
