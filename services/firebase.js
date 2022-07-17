@@ -1,8 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-app.js";
 
-// If you enabled Analytics in your project, add the Firebase SDK for Google Analytics
-
-// Add Firebase products that you want to use
 import {
   getAuth,
   GoogleAuthProvider,
@@ -10,6 +7,15 @@ import {
   signInWithPopup,
   signOut,
 } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-auth.js";
+
+import {
+  getDatabase,
+  onValue,
+  push,
+  ref,
+  remove,
+  set,
+} from "https://www.gstatic.com/firebasejs/9.9.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD-fA6xj7NchB2Fe2dg8-3deei5MtrnMCI",
@@ -20,9 +26,9 @@ const firebaseConfig = {
   appId: "1:719666390437:web:b7f3e43dcf68da7566744c",
 };
 
-// Initialize Firebase
 initializeApp(firebaseConfig);
 const auth = getAuth();
+const database = getDatabase();
 
 async function signInWithGoogle() {
   const provider = new GoogleAuthProvider();
@@ -38,10 +44,55 @@ async function signInWithGoogle() {
   }
 }
 
+async function addTransaction(transaction) {
+  const userId = auth.currentUser.uid;
+  const transactionsRef = ref(database, userId);
+
+  set(push(transactionsRef), transaction);
+}
+
+async function removeTransaction(transactionId) {
+  const userId = auth.currentUser.uid;
+  const transactionRef = ref(database, userId + "/" + transactionId);
+
+  remove(transactionRef);
+}
+
+function onTransactionsChange(callback) {
+  const userId = auth.currentUser.uid;
+  const transactionsRef = ref(database, userId);
+
+  onValue(
+    transactionsRef,
+    (snapshot) => {
+      let transactions = [];
+      snapshot.forEach((childSnapshot) => {
+        const childKey = childSnapshot.key;
+        const childData = childSnapshot.val();
+        transactions.push({ ...childData, id: childKey });
+      });
+      transactions = transactions.sort((a, b) => {
+        if (a.date == b.date) {
+          return 0;
+        }
+
+        return a.date < b.date ? -1 : 1;
+      });
+      callback(transactions);
+    },
+    {
+      onlyOnce: false,
+    }
+  );
+}
+
 export const Firebase = {
   auth,
   user: null,
   onAuthStateChanged,
   signInWithGoogle,
   signOut,
+  addTransaction,
+  removeTransaction,
+  onTransactionsChange,
 };

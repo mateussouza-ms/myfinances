@@ -3,6 +3,7 @@ import { Firebase } from "../../services/firebase.js";
 const Modal = {
   open() {
     document.querySelector(".modal-overlay").classList.add("active");
+    document.querySelector(".modal-overlay input#description").focus();
   },
   close() {
     document.querySelector(".modal-overlay").classList.remove("active");
@@ -53,23 +54,12 @@ const Transaction = {
   all: Storage.get(),
 
   add(transaction) {
-    let latestId = 0;
-
-    if (Transaction.all.length > 0) {
-      latestId = Transaction.all[Transaction.all.length - 1].id;
-    }
-
-    transaction["id"] = latestId + 1;
-
-    Transaction.all.push(transaction);
+    Firebase.addTransaction(transaction);
     Home.reload();
   },
 
   remove(id) {
-    const index = Transaction.all.findIndex(
-      (transaction) => transaction.id == id
-    );
-    Transaction.all.splice(index, 1);
+    Firebase.removeTransaction(id);
     Home.reload();
   },
 };
@@ -235,10 +225,6 @@ const Home = {
   },
 
   init() {
-    Transaction.all.forEach(Home.DOM.addTransaction);
-    Home.DOM.updateBalance();
-    Storage.set(Transaction.all);
-
     document
       .getElementById("new-transaction")
       .addEventListener("click", Modal.open);
@@ -248,11 +234,17 @@ const Home = {
     document
       .getElementById("add-transaction-form")
       .addEventListener("submit", Form.submit);
+
+    Firebase.onTransactionsChange((transactions) => {
+      Home.Transaction.all = transactions;
+      Home.reload();
+    });
   },
 
   reload() {
     Home.DOM.clearTransactions();
-    Home.init();
+    Transaction.all.forEach(Home.DOM.addTransaction);
+    Home.DOM.updateBalance();
   },
 };
 
@@ -294,17 +286,6 @@ const Auth = {
 
 const App = {
   init() {
-    let page = "";
-
-    if (window.location.href.includes("/pages/Home")) {
-      page = "HOME";
-      Home.init();
-    }
-    if (window.location.href.includes("/pages/Auth")) {
-      page = "HOME";
-      Auth.init();
-    }
-
     window.addEventListener("load", () => {
       window.unsubscribe = Firebase.onAuthStateChanged(
         Firebase.auth,
@@ -312,12 +293,18 @@ const App = {
           if (authUser) {
             Firebase.user = authUser;
             Home.DOM.updateUser(authUser);
-            !window.location.href.includes("/pages/Home") &&
+            if (window.location.href.includes("/pages/Home")) {
+              Home.init();
+            } else {
               window.location.replace("/pages/Home");
+            }
           } else {
             Firebase.user = null;
-            !window.location.href.includes("/pages/Auth") &&
+            if (window.location.href.includes("/pages/Auth")) {
+              Auth.init();
+            } else {
               window.location.replace("/pages/Auth");
+            }
           }
         }
       );
