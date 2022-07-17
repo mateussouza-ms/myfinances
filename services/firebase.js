@@ -12,12 +12,12 @@ import {
 } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCOYodRUdnDOrnhMLhe3VPQOk22-z9yxJQ",
-  authDomain: "devfinance-ms.firebaseapp.com",
-  projectId: "devfinance-ms",
-  storageBucket: "devfinance-ms.appspot.com",
-  messagingSenderId: "585011655116",
-  appId: "1:585011655116:web:170c466afc9e21bd4e6d69",
+  apiKey: "AIzaSyD-fA6xj7NchB2Fe2dg8-3deei5MtrnMCI",
+  authDomain: "myfinances-ms.firebaseapp.com",
+  projectId: "myfinances-ms",
+  storageBucket: "myfinances-ms.appspot.com",
+  messagingSenderId: "719666390437",
+  appId: "1:719666390437:web:b7f3e43dcf68da7566744c",
 };
 
 // Initialize Firebase
