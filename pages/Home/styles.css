@@ -285,6 +285,7 @@ footer {
   border-radius: 50%;
   cursor: pointer;
   transition: filter 0.2s;
+  visibility: hidden;
 }
 
 .avatar img:hover {

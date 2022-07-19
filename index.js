@@ -271,6 +271,7 @@ const Home = {
 
       if (avatarImg) {
         avatarImg.src = user.photoURL;
+        avatarImg.style.visibility = "visible";
         avatarImg.addEventListener("click", () => {
           Home.UserInfo.toggle(Firebase.auth);
         });
