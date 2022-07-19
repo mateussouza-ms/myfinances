@@ -67,8 +67,12 @@
   padding: 1rem;
 }
 
-body {
+body,
+html {
   margin: 0;
+  width: 100vw;
+  height: 100%;
+  overflow-x: hidden;
 }
 
 /* landscape */
@@ -77,13 +81,6 @@ body {
 
 /* portrait */
 @media (max-width: 420px) {
-  body,
-  html {
-    width: 100vw;
-    overflow-x: hidden;
-    height: 100%;
-  }
-
   #page-auth main {
     padding: 0.5rem 3rem;
   }
