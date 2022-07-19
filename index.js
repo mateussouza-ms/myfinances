@@ -264,13 +264,28 @@ const Home = {
     },
 
     updateUser(user) {
+      const avatarName = document.querySelector(".avatar-info > span.name");
+      const avatarEmail = document.querySelector(".avatar-info > span.email");
       const avatarImg = document.getElementById("avatar-img");
+      const logoutButton = document.getElementById("logout-link");
+
       if (avatarImg) {
         avatarImg.src = user.photoURL;
         avatarImg.addEventListener("click", () => {
           Home.UserInfo.toggle(Firebase.auth);
         });
-        document.getElementById("logout-link").addEventListener("click", () => {
+      }
+
+      if (avatarName) {
+        avatarName.innerText = user.displayName;
+      }
+
+      if (avatarEmail) {
+        avatarEmail.innerText = user.email;
+      }
+
+      if (logoutButton) {
+        logoutButton.addEventListener("click", () => {
           Firebase.signOut(Firebase.auth);
         });
       }

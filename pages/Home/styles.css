@@ -32,7 +32,7 @@ header h1 {
 
 main .container {
   margin: 0 auto;
-  max-width: min(700px, 85vw);
+  max-width: min(700px, 90vw);
 
   position: relative;
   top: -3rem;
@@ -152,6 +152,11 @@ main .container section.balance h2 {
   color: red;
 }
 
+.transactions table tr td.income,
+td.expense {
+  white-space: nowrap;
+}
+
 .modal-overlay {
   display: none;
 }
@@ -257,9 +262,9 @@ footer {
 }
 
 .avatar {
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
+  width: 50px;
+  height: 50px;
+  min-width: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
