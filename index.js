@@ -3,7 +3,55 @@ import { Firebase } from "../../services/firebase.js";
 const Modal = {
   open() {
     document.querySelector(".modal-overlay").classList.add("active");
-    document.querySelector(".modal-overlay input#description").focus();
+    Form.description.focus();
+
+    Form.amount.onkeydown = (e) => {
+      let { amount } = Form.getValues();
+
+      const isNumber = !Number.isNaN(Number(e.key));
+      const isFunctionKey =
+        e.key == "Escape" ||
+        e.key == "Tab" ||
+        e.key == "Control" ||
+        e.key == "Alt" ||
+        e.key == "Shift" ||
+        e.key == "Enter" ||
+        e.key == "Backspace";
+
+      if (isFunctionKey) {
+        return;
+      }
+
+      e.preventDefault();
+
+      if (!isNumber) {
+        return;
+      }
+
+      amount =
+        String(amount).substring(0, e.target.selectionStart) +
+        e.key +
+        String(amount).substring(e.target.selectionEnd, amount.length);
+
+      if (amount.length <= 2) {
+        Form.amount.value = amount;
+      } else {
+        const intValue = Number(amount.replace(/\D/g, ""));
+        const decimalValue = intValue / 100;
+        Form.amount.value = String(decimalValue.toFixed(2)).replace(".", ",");
+      }
+    };
+
+    Form.amount.onblur = () => {
+      let { amount } = Form.getValues();
+      amount = String(amount).replace(/\D/g, "");
+      Form.amount.value = Utils.formatCurrency(amount);
+    };
+
+    Form.amount.onfocus = (e) => {
+      Form.amount.value = Form.amount.value.replace("R$", "").trim();
+      Form.amount.select();
+    };
   },
   close() {
     document.querySelector(".modal-overlay").classList.remove("active");
@@ -66,21 +114,24 @@ const Transaction = {
 
 const Form = {
   description: document.querySelector("input#description"),
+  type: document.querySelector("select#type"),
   amount: document.querySelector("input#amount"),
   date: document.querySelector("input#date"),
 
   getValues() {
     return {
       description: Form.description.value,
+      type: Form.type.value,
       amount: Form.amount.value,
       date: Form.date.value,
     };
   },
 
   validateFields() {
-    const { description, amount, date } = Form.getValues();
+    const { type, description, amount, date } = Form.getValues();
     if (
       description.trim() === "" ||
+      type.trim() === "" ||
       amount.trim() === "" ||
       date.trim() == ""
     ) {
@@ -89,10 +140,11 @@ const Form = {
   },
 
   formatValues() {
-    let { description, amount, date } = Form.getValues();
+    let { description, type, amount, date } = Form.getValues();
+    amount = Utils.formatDecimal(amount);
 
     description = description.trim();
-    amount = Utils.formatAmount(amount);
+    amount = Utils.formatAmount(type == "DESPESA" ? `-${amount}` : amount);
     date = Utils.formatDate(date);
 
     return { description, amount, date };
@@ -100,6 +152,7 @@ const Form = {
 
   clearFields() {
     Form.description.value = "";
+    Form.type.value = "";
     Form.amount.value = "";
     Form.date.value = "";
   },
@@ -259,6 +312,12 @@ const Utils = {
     });
 
     return signal + value;
+  },
+
+  formatDecimal(value) {
+    value = String(value).replace(/\D/g, "");
+    value = Number(value) / 100;
+    return value;
   },
 
   formatAmount(value) {
