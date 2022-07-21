@@ -9,9 +9,12 @@ import {
 } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-auth.js";
 
 import {
+  get,
   getDatabase,
   onValue,
+  orderByKey,
   push,
+  query,
   ref,
   remove,
   set,
@@ -46,21 +49,48 @@ async function signInWithGoogle() {
 
 async function addTransaction(transaction) {
   const userId = auth.currentUser.uid;
-  const transactionsRef = ref(database, userId);
+  const dateSplitted = String(transaction.date).split("/");
+  const month = dateSplitted[1];
+  const year = dateSplitted[2];
+  const path = `transactions/${userId}/${year}${month}`;
+
+  const transactionsRef = ref(database, path);
 
   set(push(transactionsRef), transaction);
 }
 
-async function removeTransaction(transactionId) {
+async function removeTransaction(transaction) {
   const userId = auth.currentUser.uid;
-  const transactionRef = ref(database, userId + "/" + transactionId);
+  const dateSplitted = String(transaction.date).split("/");
+  const month = dateSplitted[1];
+  const year = dateSplitted[2];
+  const path = `transactions/${userId}/${year}${month}/${transaction.id}`;
+
+  const transactionRef = ref(database, path);
 
   remove(transactionRef);
 }
 
-function onTransactionsChange(callback) {
+async function getMonthList() {
+  // return [];
   const userId = auth.currentUser.uid;
-  const transactionsRef = ref(database, userId);
+
+  const path = `transactions/${userId}`;
+
+  const userTransactionsRef = ref(database, path);
+  const monthsSnapshot = await get(query(userTransactionsRef, orderByKey()));
+  const monthList = [];
+  monthsSnapshot.forEach((childSnapshot) => {
+    const childKey = childSnapshot.key;
+    monthList.push(childKey);
+  });
+
+  return monthList;
+}
+
+function onTransactionsChange(month, callback) {
+  const userId = auth.currentUser.uid;
+  const transactionsRef = ref(database, `transactions/${userId}/${month}`);
 
   onValue(
     transactionsRef,
@@ -76,7 +106,19 @@ function onTransactionsChange(callback) {
           return 0;
         }
 
-        return a.date < b.date ? -1 : 1;
+        const dateSplittedA = String(a.date).split("/");
+        const dayA = dateSplittedA[0];
+        const monthA = dateSplittedA[1];
+        const yearA = dateSplittedA[2];
+        const dateA = new Date(yearA, monthA, dayA);
+
+        const dateSplittedB = String(b.date).split("/");
+        const dayB = dateSplittedB[0];
+        const monthB = dateSplittedB[1];
+        const yearB = dateSplittedB[2];
+        const dateB = new Date(yearB, monthB, dayB);
+
+        return dateA < dateB ? -1 : 1;
       });
       callback(transactions);
     },
@@ -95,4 +137,5 @@ export const Firebase = {
   addTransaction,
   removeTransaction,
   onTransactionsChange,
+  getMonthList,
 };

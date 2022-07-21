@@ -106,8 +106,8 @@ const Transaction = {
     Home.reload();
   },
 
-  remove(id) {
-    Firebase.removeTransaction(id);
+  remove(transaction) {
+    Firebase.removeTransaction(transaction);
     Home.reload();
   },
 };
@@ -211,6 +211,10 @@ const Home = {
   Transaction,
   Form,
   UserInfo,
+  Months: {
+    inputSelect: document.getElementById("select-month"),
+    monthList: [],
+  },
   DOM: {
     transactionsContainer: document.querySelector("#transactions-table tbody"),
 
@@ -219,7 +223,7 @@ const Home = {
       transactionRow.innerHTML = Home.DOM.innerHTMLTransaction(transaction);
       transactionRow
         .querySelector(".actions img")
-        .addEventListener("click", () => Transaction.remove(transaction.id));
+        .addEventListener("click", () => Transaction.remove(transaction));
       Home.DOM.transactionsContainer.appendChild(transactionRow);
     },
 
@@ -291,6 +295,34 @@ const Home = {
         });
       }
     },
+
+    updateMonthOptions() {
+      const now = new Date();
+      const currentMonth = String(now.getMonth() + 1).padStart(2, "0");
+      const currentYear = String(now.getFullYear());
+      const currentMonthOption = currentYear + currentMonth;
+
+      if (!Home.Months.monthList.includes(currentMonthOption)) {
+        Home.Months.monthList.push(currentMonthOption);
+      }
+
+      Home.Months.inputSelect.innerHTML = Home.DOM.innerHTMLMonthOptions(
+        Home.Months.monthList
+      );
+
+      Home.Months.inputSelect.value = currentMonthOption;
+      Home.Months.inputSelect.onchange();
+    },
+
+    innerHTMLMonthOptions(options) {
+      return options?.map(
+        (option) =>
+          `<option value=${option}>${option.substring(4)}/${option.substring(
+            0,
+            4
+          )}</option>`
+      );
+    },
   },
 
   init() {
@@ -304,9 +336,28 @@ const Home = {
       .getElementById("add-transaction-form")
       .addEventListener("submit", Form.submit);
 
-    Firebase.onTransactionsChange((transactions) => {
-      Home.Transaction.all = transactions;
-      Home.reload();
+    Home.Months.inputSelect.onchange = () => {
+      const value = Home.Months.inputSelect.value;
+      const selectedMonth = value.substring(4);
+      const selectedYear = value.substring(0, 4);
+      const lastDayOfMonth = new Date(
+        Number(selectedYear),
+        Number(selectedMonth),
+        0
+      ).getDate();
+
+      Home.Form.date.min = `${selectedYear}-${selectedMonth}-01`;
+      Home.Form.date.max = `${selectedYear}-${selectedMonth}-${lastDayOfMonth}`;
+
+      Firebase.onTransactionsChange(value, (transactions) => {
+        Home.Transaction.all = transactions;
+        Home.reload();
+      });
+    };
+
+    Firebase.getMonthList().then((months) => {
+      Home.Months.monthList = months;
+      Home.DOM.updateMonthOptions();
     });
   },
 

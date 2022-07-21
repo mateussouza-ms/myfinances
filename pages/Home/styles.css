@@ -35,7 +35,7 @@ main .container {
   max-width: min(700px, 90vw);
 
   position: relative;
-  top: -3rem;
+  top: -5rem;
 }
 
 main .container section h2 {
@@ -46,6 +46,10 @@ main .container section h2 {
 
 main .container section.balance h2 {
   color: #fff;
+}
+
+main .container section.month {
+  margin-bottom: 1rem;
 }
 
 .balance .card {
