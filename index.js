@@ -443,3 +443,16 @@ const App = {
 };
 
 App.init();
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker
+    .register("/sw.js?v1.0")
+    .then((serviceWorker) => {
+      console.log(
+        "Service Worker registered: " + JSON.stringify(serviceWorker)
+      );
+    })
+    .catch((error) => {
+      console.log("Error registering the Service Worker: " + error);
+    });
+}

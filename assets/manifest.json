@@ -1,0 +1,19 @@
+{
+  "name": "my.finance$",
+  "short_name": "my.finance$",
+  "description": "my.finances - Gestão de finanças pessoais.",
+  "theme-color": "#0f0",
+  "background_color": "#0f0",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "lang": "pt-BR",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/assets/icon-meta.png",
+      "sizes": "400x200",
+      "type": "image/png"
+    }
+  ]
+}
