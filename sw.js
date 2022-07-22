@@ -9,6 +9,8 @@ this.addEventListener("install", (event) => {
         "/assets/favicon.png",
         "/assets/google-icon.svg",
         "/assets/icon-meta.png",
+        "/assets/icon_192x192.png",
+        "/assets/icon_512x512.png",
         "/assets/income.svg",
         "/assets/logo.svg",
         "/assets/manifest.json",
