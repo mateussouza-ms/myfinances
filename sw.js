@@ -4,15 +4,7 @@ this.addEventListener("install", (event) => {
 
   event.waitUntil(
     caches.open(staticCacheName).then((cache) => {
-      return cache.addAll([
-        "/assets",
-        "/pages",
-        "/services",
-        "/404.html",
-        "/firebase.json",
-        "/index.html",
-        "/index.js",
-      ]);
+      return cache.addAll(["/index.html", "/index.js"]);
     })
   );
 });
