@@ -3,7 +3,7 @@
   "name": "my.finance$",
   "short_name": "my.finance$",
   "description": "my.finances - Gestão de finanças pessoais.",
-  "theme-color": "#165207",
+  "theme_color": "#165207",
   "background_color": "#e1e1e1",
   "display": "standalone",
   "scope": "/",
