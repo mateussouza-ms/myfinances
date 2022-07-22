@@ -25,6 +25,7 @@ this.addEventListener("install", (event) => {
         "/assets/total.svg",
         "/pages/Auth/index.html",
         "/pages/Auth/styles.css",
+        "/pages/Home/",
         "/pages/Home/index.html",
         "/pages/Home/styles.css",
         "/services/firebase.js",

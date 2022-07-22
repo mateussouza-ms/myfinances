@@ -446,7 +446,7 @@ App.init();
 
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
-    .register("/sw.js?v2")
+    .register("/sw.js?v3")
     .then((serviceWorker) => {
       console.log(
         "Service Worker registered: " + JSON.stringify(serviceWorker)
