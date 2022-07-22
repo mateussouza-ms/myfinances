@@ -448,11 +448,9 @@ if ("serviceWorker" in navigator) {
   navigator.serviceWorker
     .register("/sw.js")
     .then((serviceWorker) => {
-      console.log(
-        "Service Worker registered: " + JSON.stringify(serviceWorker)
-      );
+      console.info("Service Worker registered: ", serviceWorker);
     })
     .catch((error) => {
-      console.log("Error registering the Service Worker: " + error);
+      console.error("Error registering the Service Worker: " + error);
     });
 }

@@ -56,8 +56,6 @@ this.addEventListener("fetch", (event) => {
     caches
       .match(event.request)
       .then((response) => {
-        console.log("sw fetch - response", response);
-
         return response || fetch(event.request);
       })
       .catch(() => {
