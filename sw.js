@@ -23,6 +23,7 @@ this.addEventListener("install", (event) => {
         "/assets/minus.svg",
         "/assets/plus.svg",
         "/assets/total.svg",
+        "/pages/Auth/",
         "/pages/Auth/index.html",
         "/pages/Auth/styles.css",
         "/pages/Home/",
