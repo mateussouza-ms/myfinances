@@ -21,7 +21,6 @@ this.addEventListener("install", (event) => {
         "/pages/Home/styles.css",
         "/services/firebase.js",
         "/404.html",
-        "/firebase.json",
         "/index.html",
         "/index.js",
       ]);
