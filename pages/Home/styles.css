@@ -50,6 +50,22 @@ main .container section.balance h2 {
 
 main .container section.month {
   margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+main .container section.month select {
+  font-size: 1.2rem;
+  padding: 0.7rem;
+  text-align: center;
+  background: transparent;
+  color: #fff;
+  width: fit-content;
+}
+
+main .container section.month select option {
+  font-size: 1.5rem;
+  color: #464646;
 }
 
 .balance .card {
