@@ -1,4 +1,4 @@
-var staticCacheName = "myfinances_2022_07_21_23_27";
+var staticCacheName = "myfinances_2022_07_22_00_52";
 this.addEventListener("install", (event) => {
   this.skipWaiting();
 
