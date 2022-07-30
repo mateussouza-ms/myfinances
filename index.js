@@ -110,6 +110,10 @@ const Transaction = {
     Firebase.removeTransaction(transaction);
     Home.reload();
   },
+
+  changeCheck(transaction, checked) {
+    Firebase.changeTransactionCheck(transaction, checked);
+  },
 };
 
 const Form = {
@@ -224,6 +228,11 @@ const Home = {
       transactionRow
         .querySelector(".actions img")
         .addEventListener("click", () => Transaction.remove(transaction));
+      const checkboxElement = transactionRow.querySelector(".check input");
+      checkboxElement.checked = transaction.checked;
+      checkboxElement.addEventListener("change", (e) => {
+        Transaction.changeCheck(transaction, e.target.checked);
+      });
       Home.DOM.transactionsContainer.appendChild(transactionRow);
     },
 
@@ -238,6 +247,9 @@ const Home = {
       }
 
       return ` 
+      <td class="check">
+        <input type="checkbox"></input>
+      </td>
       <td class="description">${transaction.description}</td>
       <td class=${cssClass}>${Utils.formatCurrency(transaction.amount)}</td>
       <td class="date">${transaction.date}</td>

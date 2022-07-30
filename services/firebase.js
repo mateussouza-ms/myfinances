@@ -72,9 +72,7 @@ async function removeTransaction(transaction) {
 }
 
 async function getMonthList() {
-  // return [];
   const userId = auth.currentUser.uid;
-
   const path = `transactions/${userId}`;
 
   const userTransactionsRef = ref(database, path);
@@ -86,6 +84,18 @@ async function getMonthList() {
   });
 
   return monthList;
+}
+
+async function changeTransactionCheck(transaction, checked) {
+  const userId = auth.currentUser.uid;
+  const dateSplitted = String(transaction.date).split("/");
+  const month = dateSplitted[1];
+  const year = dateSplitted[2];
+  const path = `transactions/${userId}/${year}${month}/${transaction.id}/checked`;
+
+  const checkRef = ref(database, path);
+
+  set(checkRef, checked);
 }
 
 function onTransactionsChange(month, callback) {
@@ -138,4 +148,5 @@ export const Firebase = {
   removeTransaction,
   onTransactionsChange,
   getMonthList,
+  changeTransactionCheck,
 };
