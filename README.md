@@ -1,8 +1,8 @@
-# DevFinance
+# MyFinances
 
 ## :information_source: Sobre o projeto
 
-Este é um projeto desenvolvido na primeira edição da Maratona Discover, um curso de programação realizado pela Rocketseat e disponível em sua plataforma.
+Este é um projeto desenvolvido com base na primeira edição da Maratona Discover, um curso de programação realizado pela Rocketseat e disponível em sua plataforma.
 <br/> <br/>
 
 ## :computer: Aplicação desenvolvida
@@ -16,6 +16,7 @@ Foi desenvolvida uma aplicação web utilizando os principais conceitos de HTML,
 ![HTML](https://img.shields.io/badge/HTML-5-green)
 ![CSS](https://img.shields.io/badge/CSS-3-green)
 ![JavaScript](https://img.shields.io/badge/JavaScript--green)
+![Firebase](https://img.shields.io/badge/Firebase--green)
 <br/> <br/>
 
 ## :pager: Design da aplicação
