@@ -58,6 +58,8 @@ const Modal = {
       let { amount } = Form.getValues();
       amount = String(amount).replace(/\D/g, "");
       Form.amount.value = Utils.formatCurrency(amount);
+    } else {
+      Form.clearFields();
     }
   },
   close() {
@@ -126,6 +128,33 @@ const Transaction = {
   changeCheck(transaction, checked) {
     Firebase.changeTransactionCheck(transaction, checked);
   },
+
+  copyFromLastMonth() {
+    const now = new Date();
+    const lastMonthDate = Utils.subtractMonth(now);
+    const lastMonth = String(lastMonthDate.getMonth() + 1).padStart(2, "0");
+    const lastYear = String(lastMonthDate.getFullYear());
+    const lastMonthOption = lastYear + lastMonth;
+    Firebase.onTransactionsChange(lastMonthOption, (transactions) => {
+      transactions.forEach((transaction) => {
+        if (!transaction.use_on_next_month) {
+          return;
+        }
+        transaction.id = null;
+        transaction.checked = false;
+
+        let transactionDate = new Date(
+          Utils.formatDateForInput(transaction.date)
+        );
+
+        transactionDate = Utils.addMonth(transactionDate);
+        transaction.date = Utils.formatDateForDisplay(
+          transactionDate.toISOString().split("T")[0]
+        );
+        Transaction.save(transaction);
+      });
+    });
+  },
 };
 
 const Form = {
@@ -134,6 +163,7 @@ const Form = {
   type: document.querySelector("select#type"),
   amount: document.querySelector("input#amount"),
   date: document.querySelector("input#date"),
+  use_on_next_month: document.querySelector("input#next-month"),
 
   getValues() {
     return {
@@ -142,6 +172,7 @@ const Form = {
       type: Form.type.value,
       amount: Form.amount.value,
       date: Form.date.value,
+      use_on_next_month: Form.use_on_next_month.checked,
     };
   },
 
@@ -159,6 +190,7 @@ const Form = {
     Form.type.value = type;
     Form.amount.value = values.amount;
     Form.date.value = Utils.formatDateForInput(values.date);
+    Form.use_on_next_month.checked = values.use_on_next_month;
   },
 
   validateFields() {
@@ -174,21 +206,23 @@ const Form = {
   },
 
   formatValues() {
-    let { id, description, type, amount, date } = Form.getValues();
+    let { description, type, amount, date, ...rest } = Form.getValues();
     amount = Utils.formatDecimal(amount);
 
     description = description.trim();
     amount = Utils.formatAmount(type == "DESPESA" ? `-${amount}` : amount);
     date = Utils.formatDateForDisplay(date);
 
-    return { id, description, amount, date };
+    return { description, amount, date, ...rest };
   },
 
   clearFields() {
+    Form.id = null;
     Form.description.value = "";
     Form.type.value = "";
     Form.amount.value = "";
     Form.date.value = "";
+    Form.use_on_next_month.checked = false;
   },
 
   submit(event) {
@@ -357,6 +391,7 @@ const Home = {
 
       if (!Home.Months.monthList.includes(currentMonthOption)) {
         Home.Months.monthList.push(currentMonthOption);
+        Transaction.copyFromLastMonth();
       }
 
       Home.Months.inputSelect.innerHTML = Home.DOM.innerHTMLMonthOptions(
@@ -461,6 +496,49 @@ const Utils = {
     const day = splittedDate[0];
 
     return `${year}-${month}-${day}`;
+  },
+
+  subtractMonth(date) {
+    if (!(date instanceof Date)) {
+      throw new Error("[subtractMonth] Invalid date format.");
+    }
+
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+    let day = date.getUTCDate();
+
+    if (month === 1) {
+      month = 12;
+      year--;
+    } else {
+      month--;
+    }
+
+    month = String(month).padStart(2, "0");
+    day = String(day).padStart(2, "0");
+
+    return new Date(`${year}-${month}-${day}`);
+  },
+
+  addMonth(date) {
+    if (!(date instanceof Date)) {
+      throw new Error("[addMonth] Invalid date format.");
+    }
+
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+    let day = date.getUTCDate();
+
+    if (month === 12) {
+      month = 1;
+      year++;
+    } else {
+      month++;
+    }
+    month = String(month).padStart(2, "0");
+    day = String(day).padStart(2, "0");
+
+    return new Date(`${year}-${month}-${day}`);
   },
 };
 

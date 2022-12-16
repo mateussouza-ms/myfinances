@@ -136,10 +136,11 @@ main .container section.month select option {
   width: 0;
 }
 
-.transactions .check input {
+input[type="checkbox"] {
   width: 1.3rem;
   height: 1.3rem;
   vertical-align: middle;
+  margin-right: 0.3rem;
 }
 
 .transactions .check input:checked:before {
@@ -240,7 +241,7 @@ td.expense {
   font-size: 0.875rem;
 }
 
-.modal .input-group input,
+.modal .input-group input:not([type="checkbox"]),
 select {
   border: 0;
   border-radius: 0.25rem;
@@ -260,7 +261,7 @@ select {
 .modal .buttons {
   display: flex;
   justify-content: space-between;
-  margin-top: 1rem;
+  margin-top: 2rem;
 }
 
 .modal .buttons .button {
