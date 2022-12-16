@@ -1,7 +1,7 @@
 import { Firebase } from "../../services/firebase.js";
 
 const Modal = {
-  open() {
+  open(transaction) {
     document.querySelector(".modal-overlay").classList.add("active");
     Form.description.focus();
 
@@ -52,6 +52,13 @@ const Modal = {
       Form.amount.value = Form.amount.value.replace("R$", "").trim();
       Form.amount.select();
     };
+
+    if (transaction) {
+      Form.setValues(transaction);
+      let { amount } = Form.getValues();
+      amount = String(amount).replace(/\D/g, "");
+      Form.amount.value = Utils.formatCurrency(amount);
+    }
   },
   close() {
     document.querySelector(".modal-overlay").classList.remove("active");
@@ -101,8 +108,13 @@ const Balance = {
 const Transaction = {
   all: Storage.get(),
 
-  add(transaction) {
-    Firebase.addTransaction(transaction);
+  save(transaction) {
+    if (transaction.id) {
+      Firebase.updateTransaction(transaction);
+    } else {
+      Firebase.addTransaction(transaction);
+    }
+
     Home.reload();
   },
 
@@ -117,6 +129,7 @@ const Transaction = {
 };
 
 const Form = {
+  id: null,
   description: document.querySelector("input#description"),
   type: document.querySelector("select#type"),
   amount: document.querySelector("input#amount"),
@@ -124,11 +137,28 @@ const Form = {
 
   getValues() {
     return {
+      id: Form.id,
       description: Form.description.value,
       type: Form.type.value,
       amount: Form.amount.value,
       date: Form.date.value,
     };
+  },
+
+  setValues(values) {
+    let type = "";
+    if (values.amount < 0) {
+      type = "DESPESA";
+      values.amount = values.amount * -1;
+    } else {
+      type = "RECEITA";
+    }
+
+    Form.id = values.id;
+    Form.description.value = values.description;
+    Form.type.value = type;
+    Form.amount.value = values.amount;
+    Form.date.value = Utils.formatDateForInput(values.date);
   },
 
   validateFields() {
@@ -144,14 +174,14 @@ const Form = {
   },
 
   formatValues() {
-    let { description, type, amount, date } = Form.getValues();
+    let { id, description, type, amount, date } = Form.getValues();
     amount = Utils.formatDecimal(amount);
 
     description = description.trim();
     amount = Utils.formatAmount(type == "DESPESA" ? `-${amount}` : amount);
-    date = Utils.formatDate(date);
+    date = Utils.formatDateForDisplay(date);
 
-    return { description, amount, date };
+    return { id, description, amount, date };
   },
 
   clearFields() {
@@ -167,7 +197,7 @@ const Form = {
     try {
       Form.validateFields();
       const transaction = Form.formatValues();
-      Transaction.add(transaction);
+      Transaction.save(transaction);
       Form.clearFields();
       Modal.close();
     } catch (error) {
@@ -226,8 +256,11 @@ const Home = {
       const transactionRow = document.createElement("tr");
       transactionRow.innerHTML = Home.DOM.innerHTMLTransaction(transaction);
       transactionRow
-        .querySelector(".actions img")
+        .querySelector(".actions #delete")
         .addEventListener("click", () => Transaction.remove(transaction));
+      transactionRow
+        .querySelector(".actions #edit")
+        .addEventListener("click", () => Modal.open(transaction));
       const checkboxElement = transactionRow.querySelector(".check input");
       checkboxElement.checked = transaction.checked;
       checkboxElement.addEventListener("change", (e) => {
@@ -255,6 +288,14 @@ const Home = {
       <td class="date">${transaction.date}</td>
       <td class="actions">
         <img 
+          id="edit"
+          src="/assets/edit.svg" 
+          alt="Editar transação" 
+          title="Editar transação"
+        >
+        
+        <img
+          id="delete"
           src="/assets/minus.svg" 
           alt="Excluir transação" 
           title="Excluir transação"
@@ -340,7 +381,7 @@ const Home = {
   init() {
     document
       .getElementById("new-transaction")
-      .addEventListener("click", Modal.open);
+      .addEventListener("click", () => Modal.open());
     document
       .getElementById("close-modal")
       .addEventListener("click", Modal.close);
@@ -404,13 +445,22 @@ const Utils = {
     return Math.round(value);
   },
 
-  formatDate(date) {
+  formatDateForDisplay(date) {
     const splittedDate = date.split("-");
     const year = splittedDate[0];
     const month = splittedDate[1];
     const day = splittedDate[2];
 
     return `${day}/${month}/${year}`;
+  },
+
+  formatDateForInput(date) {
+    const splittedDate = date.split("/");
+    const year = splittedDate[2];
+    const month = splittedDate[1];
+    const day = splittedDate[0];
+
+    return `${year}-${month}-${day}`;
   },
 };
 

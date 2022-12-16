@@ -162,6 +162,13 @@ main .container section.month select option {
   padding: 0.8rem 1.5rem;
 }
 
+.transactions table td.actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+}
+
 .transactions table td.actions img {
   cursor: pointer;
   transition: filter 0.2s;

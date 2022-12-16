@@ -48,15 +48,28 @@ async function signInWithGoogle() {
 }
 
 async function addTransaction(transaction) {
+  const transactionsPath = getTransactionsPath(transaction);
+  const transactionsRef = ref(database, transactionsPath);
+
+  set(push(transactionsRef), transaction);
+}
+
+async function updateTransaction(transaction) {
+  const transactionsPath = getTransactionsPath(transaction);
+  const transactionPath = `${transactionsPath}/${transaction.id}`;
+  const transactionRef = ref(database, transactionPath);
+
+  set(transactionRef, transaction);
+}
+
+function getTransactionsPath(transaction) {
   const userId = auth.currentUser.uid;
   const dateSplitted = String(transaction.date).split("/");
   const month = dateSplitted[1];
   const year = dateSplitted[2];
   const path = `transactions/${userId}/${year}${month}`;
 
-  const transactionsRef = ref(database, path);
-
-  set(push(transactionsRef), transaction);
+  return path;
 }
 
 async function removeTransaction(transaction) {
@@ -145,6 +158,7 @@ export const Firebase = {
   signInWithGoogle,
   signOut,
   addTransaction,
+  updateTransaction,
   removeTransaction,
   onTransactionsChange,
   getMonthList,
