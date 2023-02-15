@@ -1,5 +1,4 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-app.js";
-
 import {
   getAuth,
   GoogleAuthProvider,
@@ -7,6 +6,8 @@ import {
   signInWithPopup,
   signOut,
 } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-auth.js";
+
+import FirebaseNotification from "./notifications.js";
 
 import {
   get,
@@ -20,6 +21,11 @@ import {
   set,
 } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-database.js";
 
+import {
+  getMessaging,
+  getToken,
+} from "https://www.gstatic.com/firebasejs/9.9.0/firebase-messaging.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyD-fA6xj7NchB2Fe2dg8-3deei5MtrnMCI",
   authDomain: "myfinances-ms.firebaseapp.com",
@@ -29,9 +35,30 @@ const firebaseConfig = {
   appId: "1:719666390437:web:b7f3e43dcf68da7566744c",
 };
 
-initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const database = getDatabase();
+const messaging = getMessaging(app);
+
+getToken(messaging, {
+  vapidKey:
+    "BNIBQHE291FTfKOCsrnf5IzsDF6HE4Tad5IYgjQ14-8NNK6xQzdVfl8DGzg0nQBRGB7HUQwJgPMMS6QvZDoktpk",
+})
+  .then((currentToken) => {
+    if (currentToken) {
+      console.log("currentToken", currentToken);
+    } else {
+      // Show permission request UI
+      console.log(
+        "No registration token available. Request permission to generate one."
+      );
+      FirebaseNotification.requestPermission();
+    }
+  })
+  .catch((err) => {
+    FirebaseNotification.requestPermission();
+    console.log("An error occurred while retrieving token. ", err);
+  });
 
 async function signInWithGoogle() {
   const provider = new GoogleAuthProvider();
