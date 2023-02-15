@@ -24,6 +24,7 @@ import {
 import {
   getMessaging,
   getToken,
+  onMessage,
 } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-messaging.js";
 
 const firebaseConfig = {
@@ -47,6 +48,7 @@ getToken(messaging, {
   .then((currentToken) => {
     if (currentToken) {
       console.log("currentToken", currentToken);
+      alert("currentToken: " + currentToken);
     } else {
       // Show permission request UI
       console.log(
@@ -59,6 +61,12 @@ getToken(messaging, {
     FirebaseNotification.requestPermission();
     console.log("An error occurred while retrieving token. ", err);
   });
+
+onMessage(messaging, (payload) => {
+  console.log("Message received. ", payload);
+  alert("Message received: " + payload);
+  // ...
+});
 
 async function signInWithGoogle() {
   const provider = new GoogleAuthProvider();
