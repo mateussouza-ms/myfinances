@@ -552,6 +552,12 @@ const Auth = {
 
 const App = {
   init() {
+    const currentYearElement = document.querySelector(".current-year");
+
+    if (currentYearElement) {
+      currentYearElement.innerHTML = new Date().getFullYear();
+    }
+
     window.addEventListener("load", () => {
       window.unsubscribe = Firebase.onAuthStateChanged(
         Firebase.auth,
