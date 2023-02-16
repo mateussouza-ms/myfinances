@@ -600,3 +600,16 @@ if ("serviceWorker" in navigator) {
       console.error("Error registering the Service Worker: " + error);
     });
 }
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker
+    .register("/services/firebase-messaging-sw.js", {
+      type: "module",
+      scope: "/services/",
+    })
+    .then((serviceWorker) => {
+      console.info("firebase-messaging-sw.js registered: ", serviceWorker);
+    })
+    .catch((error) => {
+      console.error("Error registering the Service Worker: " + error);
+    });
+}

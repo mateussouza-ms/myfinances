@@ -48,7 +48,7 @@ getToken(messaging, {
   .then((currentToken) => {
     if (currentToken) {
       console.log("currentToken", currentToken);
-      alert("currentToken: " + currentToken);
+      // alert("currentToken: " + currentToken);
     } else {
       // Show permission request UI
       console.log(
