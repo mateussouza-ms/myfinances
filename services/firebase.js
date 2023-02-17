@@ -7,8 +7,6 @@ import {
   signOut,
 } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-auth.js";
 
-import FirebaseNotification from "./notifications.js";
-
 import {
   get,
   getDatabase,
@@ -24,12 +22,12 @@ import {
 import {
   getMessaging,
   getToken,
-  onMessage,
 } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-messaging.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD-fA6xj7NchB2Fe2dg8-3deei5MtrnMCI",
   authDomain: "myfinances-ms.firebaseapp.com",
+  databaseURL: "https://myfinances-ms-default-rtdb.firebaseio.com",
   projectId: "myfinances-ms",
   storageBucket: "myfinances-ms.appspot.com",
   messagingSenderId: "719666390437",
@@ -40,33 +38,6 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const database = getDatabase();
 const messaging = getMessaging(app);
-
-getToken(messaging, {
-  vapidKey:
-    "BNIBQHE291FTfKOCsrnf5IzsDF6HE4Tad5IYgjQ14-8NNK6xQzdVfl8DGzg0nQBRGB7HUQwJgPMMS6QvZDoktpk",
-})
-  .then((currentToken) => {
-    if (currentToken) {
-      console.log("currentToken", currentToken);
-      // alert("currentToken: " + currentToken);
-    } else {
-      // Show permission request UI
-      console.log(
-        "No registration token available. Request permission to generate one."
-      );
-      FirebaseNotification.requestPermission();
-    }
-  })
-  .catch((err) => {
-    FirebaseNotification.requestPermission();
-    console.log("An error occurred while retrieving token. ", err);
-  });
-
-onMessage(messaging, (payload) => {
-  console.log("Message received. ", payload);
-  alert("Message received: " + payload);
-  // ...
-});
 
 async function signInWithGoogle() {
   const provider = new GoogleAuthProvider();
@@ -186,6 +157,59 @@ function onTransactionsChange(month, callback) {
   );
 }
 
+async function getMessagingToken() {
+  const permission = await Notification.requestPermission();
+
+  if (permission !== "granted") {
+    console.info("Notification permission not granted.");
+    return;
+  }
+
+  console.info("Notification permission granted.");
+
+  try {
+    const currentToken = await getToken(messaging, {
+      vapidKey:
+        "BNIBQHE291FTfKOCsrnf5IzsDF6HE4Tad5IYgjQ14-8NNK6xQzdVfl8DGzg0nQBRGB7HUQwJgPMMS6QvZDoktpk",
+    });
+
+    addNotificationToken(currentToken);
+  } catch (error) {
+    console.error("An error occurred while retrieving token. ", error);
+  }
+}
+
+async function addNotificationToken(token) {
+  const tokenIsAlreadySaved = await checkIfNotificationTokenIsSaved(token);
+  if (tokenIsAlreadySaved) return;
+
+  const userId = auth.currentUser.uid;
+  const path = `notification_tokens/${userId}/`;
+  const notificationTokensRef = ref(database, path);
+
+  set(push(notificationTokensRef), token);
+}
+
+async function checkIfNotificationTokenIsSaved(token) {
+  const userId = auth.currentUser.uid;
+  const path = `notification_tokens/${userId}/`;
+  const notificationTokensRef = ref(database, path);
+
+  const tokensSnapshot = await get(notificationTokensRef);
+
+  let isSaved = false;
+  tokensSnapshot.forEach((childSnapshot) => {
+    const value = childSnapshot.val();
+
+    if (token === value) {
+      isSaved = true;
+      return;
+    }
+  });
+
+  return isSaved;
+}
+
 export const Firebase = {
   auth,
   user: null,
@@ -198,4 +222,5 @@ export const Firebase = {
   onTransactionsChange,
   getMonthList,
   changeTransactionCheck,
+  getMessagingToken,
 };

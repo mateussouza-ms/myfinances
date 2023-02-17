@@ -564,6 +564,7 @@ const App = {
         async (authUser) => {
           if (authUser) {
             Firebase.user = authUser;
+            Firebase.getMessagingToken();
             Home.DOM.updateUser(authUser);
             if (window.location.href.includes("/pages/Home")) {
               Home.init();
@@ -595,19 +596,6 @@ if ("serviceWorker" in navigator) {
     .register("/sw.js")
     .then((serviceWorker) => {
       console.info("Service Worker registered: ", serviceWorker);
-    })
-    .catch((error) => {
-      console.error("Error registering the Service Worker: " + error);
-    });
-}
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker
-    .register("/services/firebase-messaging-sw.js", {
-      type: "module",
-      scope: "/services/",
-    })
-    .then((serviceWorker) => {
-      console.info("firebase-messaging-sw.js registered: ", serviceWorker);
     })
     .catch((error) => {
       console.error("Error registering the Service Worker: " + error);
