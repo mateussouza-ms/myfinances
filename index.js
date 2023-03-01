@@ -517,7 +517,7 @@ const Utils = {
     month = String(month).padStart(2, "0");
     day = String(day).padStart(2, "0");
 
-    return new Date(`${year}-${month}-${day}`);
+    return new Date(`${year}-${month}-${day} 00:00:00`);
   },
 
   addMonth(date) {
@@ -538,7 +538,7 @@ const Utils = {
     month = String(month).padStart(2, "0");
     day = String(day).padStart(2, "0");
 
-    return new Date(`${year}-${month}-${day}`);
+    return new Date(`${year}-${month}-${day} 00:00:00`);
   },
 };
 
